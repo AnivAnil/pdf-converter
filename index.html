@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Convert - Free Client-Side PDF Tools</title>
+
+<!-- LIBS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<style>
+/* ================== GLOBAL & BASE ================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  color: #f1f5f9;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 50% 0%, #15102a, #070510);
+  min-height: 100vh;
+  padding-bottom: 160px;
+}
+
+/* ================== AMBIENT LIGHTING (ORBS) ================== */
+.orb {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.25;
+  animation: floatOrb 20s infinite ease-in-out;
+  z-index: -1;
+}
+
+.orb:nth-child(1) { background: #ff2a5f; top: -5%; left: -5%; animation-duration: 18s; }
+.orb:nth-child(2) { background: #00f2fe; top: 35%; right: -5%; animation-duration: 25s; }
+.orb:nth-child(3) { background: #9b51e0; top: 70%; left: 15%; animation-duration: 22s; }
+
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+  50% { transform: translateY(-50px) scale(1.15) rotate(180deg); }
+}
+
+/* ================== HEADER ================== */
+header {
+  text-align: center;
+  padding: 50px 20px 30px;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-shadow: 0 0 30px rgba(255, 42, 95, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h1 span {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p.subtitle {
+  color: #94a3b8;
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+/* ================== GRID CONTAINER ================== */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 20px;
+  perspective: 1500px;
+}
+
+/* ================== GLASSMORPHISM CARD ================== */
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 28px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(0, 242, 254, 0.4);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 25px 50px rgba(0, 242, 254, 0.15);
+}
+
+.card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+}
+
+/* ================== FORMS & INPUTS ================== */
+textarea, input[type="file"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 12px;
+}
+
+textarea:focus {
+  border-color: #00f2fe;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+}
+
+input[type="file"] {
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+input[type="file"]::file-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+input[type="file"]::file-selector-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ================== PREMIUM DROP ZONE ================== */
+.drop {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  padding: 30px 20px;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-bottom: 14px;
+}
+
+.drop:hover {
+  border-color: #00f2fe;
+  background: rgba(0, 242, 254, 0.04);
+  color: #fff;
+}
+
+/* ================== PREMIUM BUTTONS ================== */
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #ff2a5f, #ff7e40);
+  box-shadow: 0 8px 20px rgba(255, 42, 95, 0.25);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:nth-child(1) button { background: linear-gradient(135deg, #00f2fe, #4facfe); box-shadow: 0 8px 20px rgba(0, 242, 254, 0.25); }
+.card:nth-child(2) button { background: linear-gradient(135deg, #b154ff, #7c4dff); box-shadow: 0 8px 20px rgba(124, 77, 255, 0.25); }
+.card:nth-child(3) button { background: linear-gradient(135deg, #11ffbd, #aaffe5); color: #070510; box-shadow: 0 8px 20px rgba(17, 255, 189, 0.25); }
+.card:nth-child(4) button { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #070510; box-shadow: 0 8px 20px rgba(255, 154, 158, 0.25); }
+
+button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* ================== PROGRESS BAR ================== */
+.progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00f2fe, #4facfe);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* ================== LIVE PREVIEW IMAGE POOL ================== */
+.preview {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.preview img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ================== CONTACT SECTION ================== */
+.contact-section {
+  max-width: 1100px;
+  margin: 40px auto 20px;
+  padding: 0 20px;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.contact-card h4 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.contact-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #94a3b8;
+}
+
+.contact-item a {
+  color: #00f2fe;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.contact-item a:hover {
+  color: #4facfe;
+  text-decoration: underline;
+}
+
+/* ================== NAVIGATION BAR ================== */
+.nav {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 12, 30, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index: 1000;
+}
+
+.nav-item {
+  padding: 12px 24px;
+  color: #94a3b8;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+</style>
+</head>
+
+<body>
+
+<div class="orb"></div>
+<div class="orb"></div>
+<div class="orb"></div>
+
+<header>
+  <h1>⚡ PDF <span>CONVERT</span></h1>
+  <p class="subtitle">Fast, secure, and beautiful Client-Side PDF Tools</p>
+</header>
+
+<div class="container">
+
+  <!-- IMAGE PDF -->
+  <div class="card">
+    <div>
+      <h3>🖼️ Image → PDF</h3>
+      <div class="drop" onclick="imgInput.click()">Drag & Drop Images here or Click</div>
+      <input type="file" id="imgInput" multiple hidden onchange="handleImgPreview()">
+    </div>
+    <div>
+      <div class="preview" id="imgPreview"></div>
+      <button onclick="imgToPDF()">Convert Images</button>
+      <div class="progress"><div id="p1" class="bar"></div></div>
+    </div>
+  </div>
+
+  <!-- TEXT PDF -->
+  <div class="card">
+    <div>
+      <h3>📝 Text → PDF</h3>
+      <textarea id="text" placeholder="Type or paste your rich document text content here..."></textarea>
+    </div>
+    <div>
+      <button onclick="textToPDF()">Generate PDF</button>
+      <div class="progress"><div id="p2" class="bar"></div></div>
+    </div>
+  </div>
+
+  <!-- MERGE -->
+  <div class="card">
+    <div>
+      <h3>📎 Merge PDFs</h3>
+      <div class="drop" onclick="pdfInput.click()">Select multi-page PDFs</div>
+      <input type="file" id="pdfInput" multiple hidden>
+    </div>
+    <div>
+      <button onclick="mergePDF()">Merge Files</button>
+      <div class="progress"><div id="p3" class="bar"></div></div>
+    </div>
+  </div>
+
+  <!-- PDF TO WORD -->
+  <div class="card">
+    <div>
+      <h3>📄 PDF → Word</h3>
+      <input type="file" id="pdfWord" accept=".pdf">
+    </div>
+    <div>
+      <button onclick="pdfToWord()">Convert to Docx</button>
+      <div class="progress"><div id="p4" class="bar"></div></div>
+    </div>
+  </div>
+
+  <!-- WORD TO PDF -->
+  <div class="card">
+    <div>
+      <h3>📝 Word → PDF</h3>
+      <input type="file" id="word" accept=".docx">
+    </div>
+    <div>
+      <button onclick="wordToPDF()">Convert to PDF</button>
+      <div class="progress"><div id="p5" class="bar"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ====== INTEGRATED CONTACT INFO SECTION ====== -->
+<div class="contact-section">
+  <div class="contact-card">
+    <h4>📢 Ad placement / Inquiries</h4>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <span>✉️ Email:</span> 
+        <a href="mailto:anilsouth65@gmail.com">anilsouth65@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <span>📞 Phone:</span> 
+        <a href="tel:9514391536">9514391536</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-item active">🏠 Home</div>
+  <div class="nav-item">🖼️ Image</div>
+  <div class="nav-item">📄 PDF</div>
+  <div class="nav-item">⚙️ Tools</div>
+</div>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+// Setup worker path for PDF.js to function accurately
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function setBar(id, val){
+  document.getElementById(id).style.width = val + "%";
+}
+
+function handleImgPreview() {
+  const files = imgInput.files;
+  const preview = document.getElementById("imgPreview");
+  preview.innerHTML = "";
+  for (let i = 0; i < files.length; i++) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      let im = document.createElement("img");
+      im.src = e.target.result;
+      preview.appendChild(im);
+    }
+    reader.readAsDataURL(files[i]);
+  }
+}
+
+async function imgToPDF(){
+  const files = imgInput.files;
+  if(!files.length) return alert("Please select images first!");
+  const pdf = new jsPDF();
+  
+  for(let i=0; i<files.length; i++){
+    setBar("p1", (i / files.length) * 100);
+    const imgData = await read(files[i]);
+    const img = new Image();
+    img.src = imgData;
+    await new Promise(r => img.onload = r);
+
+    const w = pdf.internal.pageSize.getWidth();
+    const h = (img.height * w) / img.width;
+
+    if(i > 0) pdf.addPage();
+    pdf.addImage(imgData, "JPEG", 0, 0, w, h);
+  }
+  pdf.save("images.pdf");
+  setBar("p1", 100);
+}
+
+function textToPDF(){
+  const t = text.value;
+  if(!t.trim()) return alert("Please input some text!");
+  const pdf = new jsPDF();
+  pdf.text(pdf.splitTextToSize(t, 180), 10, 20);
+  pdf.save("text.pdf");
+  setBar("p2", 100);
+}
+
+async function mergePDF(){
+  const files = pdfInput.files;
+  if(!files.length) return alert("Please select PDF files to merge!");
+  const merged = await PDFLib.PDFDocument.create();
+
+  for(let i=0; i<files.length; i++){
+    setBar("p3", (i / files.length) * 100);
+    const buf = await files[i].arrayBuffer();
+    const pdf = await PDFLib.PDFDocument.load(buf);
+    const pages = await merged.copyPages(pdf, pdf.getPageIndices());
+    pages.forEach(p => merged.addPage(p));
+  }
+
+  const bytes = await merged.save();
+  download(bytes, "merged.pdf");
+  setBar("p3", 100);
+}
+
+async function pdfToWord(){
+  const file = pdfWord.files[0];
+  if(!file) return alert("Please upload a PDF file!");
+  
+  try {
+    const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
+    let text = "";
+    
+    for(let i=1; i<=pdf.numPages; i++){
+      const p = await pdf.getPage(i);
+      const c = await p.getTextContent();
+      text += c.items.map(i => i.str).join(" ") + "\n\n";
+      setBar("p4", (i / pdf.numPages) * 100);
+    }
+
+    const doc = new docx.Document({
+      sections: [{ children: [new docx.Paragraph(text)] }]
+    });
+
+    const blob = await docx.Packer.toBlob(doc);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "converted_file.docx";
+    a.click();
+    setBar("p4", 100);
+  } catch(error) {
+    alert("Error parsing PDF file: " + error.message);
+    setBar("p4", 0);
+  }
+}
+
+/* FIXED WORD TO PDF FUNCTION USING MAMMOTH.JS */
+async function wordToPDF(){
+  const file = word.files[0];
+  if(!file) return alert("Please choose a Word file (.docx)!");
+  
+  setBar("p5", 25);
+  const arrayBuffer = await file.arrayBuffer();
+  
+  try {
+    const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+    const textContent = result.value; 
+    
+    setBar("p5", 60);
+    if (!textContent.trim()) {
+       throw new Error("The selected Word file appears to contain no readable text.");
+    }
+
+    const pdf = new jsPDF();
+    const margins = 10;
+    const splitText = pdf.splitTextToSize(textContent, 180);
+    pdf.text(splitText, margins, 20);
+    
+    pdf.save("word.pdf");
+    setBar("p5", 100);
+  } catch (error) {
+    alert("Error parsing Word file: " + error.message);
+    setBar("p5", 0);
+  }
+}
+
+/* HELPERS */
+function read(file){
+  return new Promise(r => {
+    const f = new FileReader();
+    f.onload = e => r(e.target.result);
+    f.readAsDataURL(file);
+  });
+}
+
+function download(data, name){
+  const b = new Blob([data], {type: "application/pdf"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(b);
+  a.download = name;
+  a.click();
+}
+</script>
+
+</body>
+</html>
