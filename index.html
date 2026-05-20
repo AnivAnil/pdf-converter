@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Convert - Free Client-Side PDF Tools</title>
+
+<!-- SEO Meta Tags -->
+<title>Free Online PDF Converter | Merge & Convert Images, Word, Text to PDF</title>
+<meta name="description" content="Convert images to PDF, merge multiple PDF documents, translate Word documents into PDFs, or convert PDFs to editable Word format. 100% free, private, and secure client-side browser tools.">
+<meta name="keywords" content="pdf converter, free pdf tools, image to pdf, word to pdf, pdf to word, merge pdf online, client side pdf, secure pdf tool">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourdomain.com/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free Online PDF Converter | Merge & Convert Images, Word, Text to PDF">
+<meta property="og:description" content="Fast, secure, and beautiful client-side PDF tools. Your files never leave your computer.">
+<meta property="og:url" content="https://yourdomain.com/">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="Free Online PDF Converter | Merge & Convert Images, Word, Text to PDF">
+<meta property="twitter:description" content="Fast, secure, and beautiful client-side PDF tools. Your files never leave your computer.">
 
 <!-- LIBS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -111,7 +128,7 @@ p.subtitle {
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 25px 50px rgba(0, 242, 254, 0.15);
 }
 
-.card h3 {
+.card h2 {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 16px;
@@ -252,6 +269,21 @@ button:active {
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
+/* ================== SEO INFORMATION TEXT ================== */
+.seo-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.seo-content h2 {
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
 /* ================== CONTACT SECTION ================== */
 .contact-section {
   max-width: 1100px;
@@ -270,7 +302,7 @@ button:active {
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
-.contact-card h4 {
+.contact-card h3 {
   font-size: 18px;
   color: #fff;
   margin-bottom: 12px;
@@ -353,77 +385,84 @@ button:active {
   <p class="subtitle">Fast, secure, and beautiful Client-Side PDF Tools</p>
 </header>
 
-<div class="container">
+<main class="container">
 
   <!-- IMAGE PDF -->
-  <div class="card">
+  <section class="card">
     <div>
-      <h3>🖼️ Image → PDF</h3>
-      <div class="drop" onclick="imgInput.click()">Drag & Drop Images here or Click</div>
-      <input type="file" id="imgInput" multiple hidden onchange="handleImgPreview()">
+      <h2>🖼️ Image to PDF Converter</h2>
+      <div class="drop" onclick="imgInput.click()" role="button" aria-label="Upload Images">Drag & Drop Images here or Click</div>
+      <input type="file" id="imgInput" multiple hidden onchange="handleImgPreview()" accept="image/*">
     </div>
     <div>
       <div class="preview" id="imgPreview"></div>
-      <button onclick="imgToPDF()">Convert Images</button>
+      <button onclick="imgToPDF()">Convert Images to PDF</button>
       <div class="progress"><div id="p1" class="bar"></div></div>
     </div>
-  </div>
+  </section>
 
   <!-- TEXT PDF -->
-  <div class="card">
+  <section class="card">
     <div>
-      <h3>📝 Text → PDF</h3>
+      <h2>📝 Text to PDF Generator</h2>
+      <label for="text" class="visually-hidden" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">Input Text Content</label>
       <textarea id="text" placeholder="Type or paste your rich document text content here..."></textarea>
     </div>
     <div>
-      <button onclick="textToPDF()">Generate PDF</button>
+      <button onclick="textToPDF()">Generate PDF Document</button>
       <div class="progress"><div id="p2" class="bar"></div></div>
     </div>
-  </div>
+  </section>
 
   <!-- MERGE -->
-  <div class="card">
+  <section class="card">
     <div>
-      <h3>📎 Merge PDFs</h3>
-      <div class="drop" onclick="pdfInput.click()">Select multi-page PDFs</div>
-      <input type="file" id="pdfInput" multiple hidden>
+      <h2>📎 Combine & Merge PDFs</h2>
+      <div class="drop" onclick="pdfInput.click()" role="button" aria-label="Upload multiple PDFs">Select multi-page PDFs</div>
+      <input type="file" id="pdfInput" multiple hidden accept=".pdf">
     </div>
     <div>
-      <button onclick="mergePDF()">Merge Files</button>
+      <button onclick="mergePDF()">Merge PDF Files</button>
       <div class="progress"><div id="p3" class="bar"></div></div>
     </div>
-  </div>
+  </section>
 
   <!-- PDF TO WORD -->
-  <div class="card">
+  <section class="card">
     <div>
-      <h3>📄 PDF → Word</h3>
-      <input type="file" id="pdfWord" accept=".pdf">
+      <h2>📄 Convert PDF to Word (Docx)</h2>
+      <input type="file" id="pdfWord" accept=".pdf" aria-label="Choose PDF file to convert to Word">
     </div>
     <div>
-      <button onclick="pdfToWord()">Convert to Docx</button>
+      <button onclick="pdfToWord()">Convert to Word Docx</button>
       <div class="progress"><div id="p4" class="bar"></div></div>
     </div>
-  </div>
+  </section>
 
   <!-- WORD TO PDF -->
-  <div class="card">
+  <section class="card">
     <div>
-      <h3>📝 Word → PDF</h3>
-      <input type="file" id="word" accept=".docx">
+      <h2>📝 Convert Word to PDF</h2>
+      <input type="file" id="word" accept=".docx" aria-label="Choose Word file to convert to PDF">
     </div>
     <div>
-      <button onclick="wordToPDF()">Convert to PDF</button>
+      <button onclick="wordToPDF()">Convert Word to PDF</button>
       <div class="progress"><div id="p5" class="bar"></div></div>
     </div>
-  </div>
+  </section>
 
-</div>
+</main>
+
+<!-- SEO TEXT SECTION FOR SEARCH CRAWLERS -->
+<article class="seo-content">
+  <h2>100% Secure & Local Browser PDF Toolset</h2>
+  <p>Our online suite offers a secure approach to document handling. Unlike alternative web utilities that upload your sensitive documents to remote host servers, PDF Convert manages all modifications completely inside your browser window context. Your pictures, Word templates, and layout inputs never parse outside your desktop engine, introducing a zero-risk footprint for enterprise assets or personal identity logs.</p>
+</article>
 
 <!-- ====== INTEGRATED CONTACT INFO SECTION ====== -->
-<div class="contact-section">
+<footer class="contact-section">
   <div class="contact-card">
-    <h4>📢 Ad placement / Inquiries</h4>
+    <h3>📢 Ad placement / Inquiries</h3>
     <div class="contact-grid">
       <div class="contact-item">
         <span>✉️ Email:</span> 
@@ -435,14 +474,14 @@ button:active {
       </div>
     </div>
   </div>
-</div>
+</footer>
 
-<div class="nav">
+<nav class="nav" aria-label="Main Navigation">
   <div class="nav-item active">🏠 Home</div>
   <div class="nav-item">🖼️ Image</div>
   <div class="nav-item">📄 PDF</div>
   <div class="nav-item">⚙️ Tools</div>
-</div>
+</nav>
 
 <script>
 const { jsPDF } = window.jspdf;
@@ -463,6 +502,7 @@ function handleImgPreview() {
     reader.onload = function(e) {
       let im = document.createElement("img");
       im.src = e.target.result;
+      im.alt = "Uploaded image preview for conversion " + (i + 1);
       preview.appendChild(im);
     }
     reader.readAsDataURL(files[i]);
@@ -549,7 +589,6 @@ async function pdfToWord(){
   }
 }
 
-/* FIXED WORD TO PDF FUNCTION USING MAMMOTH.JS */
 async function wordToPDF(){
   const file = word.files[0];
   if(!file) return alert("Please choose a Word file (.docx)!");
@@ -579,7 +618,6 @@ async function wordToPDF(){
   }
 }
 
-/* HELPERS */
 function read(file){
   return new Promise(r => {
     const f = new FileReader();
