@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dashing-fox-ff6a9c.netlify.app/sitemap.xml
