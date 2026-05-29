@@ -4,22 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- SEO Meta Tags -->
 <title>Free Online PDF Tools - Merge PDF, Text to PDF & PDF to Word</title>
 <meta name="description" content="Merge multiple PDF documents, generate PDFs from text, or convert PDFs to editable Word format. 100% free, private, and secure client-side browser tools.">
 <meta name="keywords" content="merge pdf online, combine pdf, text to pdf, pdf to word, free pdf tools, secure pdf converter">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashing-fox-ff6a9c.netlify.app/pdf-tools.html">
 
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Advanced PDF Utilities Suite | Free & Secure Online">
 <meta property="og:description" content="Fast, secure, and beautiful client-side PDF manipulation tools. Your records never leave your machine.">
 
-<!-- GOOGLE ADSENSE -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816153546500274" crossorigin="anonymous"></script>
 
-<!-- LIBS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -261,10 +257,48 @@ button:hover {
   margin-top: 10px;
 }
 
+.contact-item {
+  font-size: 15px;
+  color: #94a3b8;
+}
+
 .contact-item a {
   color: #00f2fe;
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.2s;
+}
+.contact-item a:hover {
+  color: #4facfe;
+}
+
+.footer-links {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.footer-links button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: #94a3b8;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: normal;
+  transition: color 0.2s;
+}
+
+.footer-links button:hover {
+  color: #fff;
+  transform: none;
+  filter: none;
+  box-shadow: none;
 }
 
 /* ================== DOCK NAVIGATION BAR ================== */
@@ -299,10 +333,111 @@ button:hover {
   gap: 8px;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
 }
+
+/* ================== POPUP MODAL STYLES ================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(7, 5, 16, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: rgba(25, 20, 45, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+  border-radius: 24px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 35px;
+  position: relative;
+  text-align: left;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.modal-overlay.active .modal-box {
+  transform: scale(1);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #ff2a5f;
+  border-color: #ff2a5f;
+  transform: rotate(90deg);
+}
+
+.modal-box h2 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 10px;
+}
+
+.modal-box h3 {
+  font-size: 16px;
+  color: #00f2fe;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+.modal-box p, .modal-box ul {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+}
+.modal-box ul { margin-left: 20px; display: block; }
 </style>
 </head>
 
@@ -318,7 +453,6 @@ button:hover {
 
 <main class="container">
 
-  <!-- UTILITY 1: MERGE PDF -->
   <section class="card">
     <div>
       <h2>📎 Combine & Merge PDFs</h2>
@@ -335,7 +469,6 @@ button:hover {
     </div>
   </section>
 
-  <!-- UTILITY 2: TEXT TO PDF -->
   <section class="card">
     <div>
       <h2>📝 Text to PDF Generator</h2>
@@ -347,7 +480,6 @@ button:hover {
     </div>
   </section>
 
-  <!-- UTILITY 3: PDF TO WORD -->
   <section class="card">
     <div>
       <h2>📄 PDF to Word Converter</h2>
@@ -380,10 +512,13 @@ button:hover {
       <div class="contact-item">✉️ Email: <a href="mailto:anilsouth65@gmail.com">anilsouth65@gmail.com</a></div>
       <div class="contact-item">📞 Phone: <a href="tel:9514391536">9514391536</a></div>
     </div>
+    <div class="footer-links">
+      <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button>
+      <button type="button" onclick="openModal('termsModal')">Terms & Conditions</button>
+    </div>
   </div>
 </footer>
 
-<!-- SYSTEM NAVIGATION LINK MATRIX -->
 <nav class="nav">
   <a class="nav-item" href="index.html">🏠 Home</a>
   <a class="nav-item" href="image-to-pdf.html">🖼️ Image</a>
@@ -392,9 +527,58 @@ button:hover {
   <a class="nav-item" href="AI_image_generater.html">🎨 AI Image Gen</a>
 </nav>
 
+
+<div id="privacyModal" class="modal-overlay" onclick="closeModal(event, 'privacyModal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="document.getElementById('privacyModal').classList.remove('active')">&times;</button>
+    <h2>Privacy Policy</h2>
+    <p><strong>Effective Date:</strong> May 29, 2026</p>
+    <p>Your privacy is of critical priority to us. This legal disclosure clarifies how our dynamic web workspace handles computational data parameters securely.</p>
+    
+    <h3>1. Zero Data Retention Architecture</h3>
+    <p>Our infrastructure functions strictly via client-side operations. Any image arrays, system configurations, textual scripts, or digital document nodes imported into the program UI modules undergo compilation in local sandbox runtimes. Your source data assets never upload to remote cloud storage engines or exterior web logs.</p>
+    
+    <h3>2. Advertising & External Cookies</h3>
+    <p>We deploy Google AdSense services to serve dynamic banner units. Vendor partners use algorithmic cookie architectures (such as the DART configuration layer) to tailor visual components depending on user traversal vectors. You can configure precise opting configurations natively via target browser tracking parameters.</p>
+    
+    <h3>3. Direct Web Inquiries</h3>
+    <p>When contacting our operator desks via explicit telephone lines or email frameworks, communication logs are processed strictly to answer individual technical requests and are completely isolated from peripheral operational monetization loops.</p>
+  </div>
+</div>
+
+
+<div id="termsModal" class="modal-overlay" onclick="closeModal(event, 'termsModal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="document.getElementById('termsModal').classList.remove('active')">&times;</button>
+    <h2>Terms & Conditions</h2>
+    <p><strong>Effective Date:</strong> May 29, 2026</p>
+    <p>By operating these client tools, you comprehensively agree to conform to the statutory operational bounds outlined below.</p>
+    
+    <h3>1. Usage Permissions and Scope</h3>
+    <p>Users receive fully free, open access to run structural components across files, spreadsheets, text bodies, and design files indefinitely. Usage must comply with applicable regional privacy paradigms and copyholder frameworks.</p>
+    
+    <h3>2. Liability Disclaimer</h3>
+    <p>The applications run entirely "as-is" without architectural warranties of any variety. The creators hold no legal liability for any peripheral processing delays, browser runtime stalls, memory hardware failures, or secondary data issues stemming from execution tasks.</p>
+    
+    <h3>3. Structural Updates</h3>
+    <p>We retain full privileges to reconfigure tool algorithms, interface formatting layouts, asset distribution hooks, or core platform Terms conditions instantly without prior system-wide declarations.</p>
+  </div>
+</div>
+
+
 <script>
 // Configure Text Parsing Engine Paths
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+/* --- POPUP WINDOW TRIGGERS --- */
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+function closeModal(event, id) {
+  if (event.target === document.getElementById(id)) {
+    document.getElementById(id).classList.remove('active');
+  }
+}
 
 // Setup Event Listeners for Drag and Drop Mechanics
 function setupDropZone(dropId, inputId, statusId, multi) {
