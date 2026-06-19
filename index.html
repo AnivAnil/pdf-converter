@@ -1,834 +1,1185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFGenie – Free Online PDF Tools Suite</title>
+    <meta name="description" content="Convert images to PDF, merge documents, convert Word to PDF, and more. 100% free, private, client-side PDF tools with no uploads.">
+    <meta name="keywords" content="pdf converter, free pdf tools, image to pdf, word to pdf, merge pdf, client-side pdf">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dashing-fox-ff6a9c.netlify.app/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PDFGenie – Free Online PDF Tools Suite">
+    <meta property="og:description" content="Fast, secure, client-side PDF tools. Your files never leave your computer.">
 
-<title>Free Online PDF Converter - Image, Word & PDF Tools (100% Free)</title>
-<meta name="description" content="Convert images to PDF, merge multiple PDF documents, translate Word documents into PDFs, or convert PDFs to editable Word format. 100% free, private, and secure client-side browser tools.">
-<meta name="keywords" content="pdf converter, free pdf tools, image to pdf, word to pdf, pdf to word, merge pdf online, client side pdf, secure pdf tool">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://dashing-fox-ff6a9c.netlify.app/">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816153546500274" crossorigin="anonymous">
+    </script>
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Free Online PDF Converter | Merge & Convert Images, Word, Text to PDF">
-<meta property="og:description" content="Fast, secure, and beautiful client-side PDF tools. Your files never leave your computer.">
-<meta property="og:url" content="https://dashing-fox-ff6a9c.netlify.app/">
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+    </script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js">
+    </script>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816153546500274" crossorigin="anonymous"></script>
+    <style>
+        /* ============================================================
+           SAAS DESIGN SYSTEM – PDFGenie THEME
+           ============================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="Free Online PDF Converter | Merge & Convert Images, Word, Text to PDF">
-<meta property="twitter:description" content="Fast, secure, and beautiful client-side PDF tools. Your files never leave your computer.">
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 40px rgba(99, 102, 241, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-/* ================== GLOBAL & BASE ================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
 
-body {
-  color: #f1f5f9;
-  overflow-x: hidden;
-  background: radial-gradient(circle at 50% 0%, #15102a, #070510);
-  min-height: 100vh;
-  padding-bottom: 160px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-/* ================== AMBIENT LIGHTING (ORBS) ================== */
-.orb {
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.25;
-  animation: floatOrb 20s infinite ease-in-out;
-  z-index: -1;
-}
+        /* ─── HEADER (Simple) ─── */
+        .site-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-align: center;
+        }
 
-.orb:nth-child(1) { background: #ff2a5f; top: -5%; left: -5%; animation-duration: 18s; }
-.orb:nth-child(2) { background: #00f2fe; top: 35%; right: -5%; animation-duration: 25s; }
-.orb:nth-child(3) { background: #9b51e0; top: 70%; left: 15%; animation-duration: 22s; }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
 
-@keyframes floatOrb {
-  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-  50% { transform: translateY(-50px) scale(1.15) rotate(180deg); }
-}
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+            font-size: 20px;
+        }
 
-/* ================== HEADER ================== */
-header {
-  text-align: center;
-  padding: 50px 20px 30px;
-}
+        .logo span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-h1 {
-  font-size: 42px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: #ffffff;
-  text-shadow: 0 0 30px rgba(255, 42, 95, 0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-}
+        .header-tagline {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
 
-h1 span {
-  background: linear-gradient(135deg, #00f2fe, #4facfe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+        /* ─── HERO ─── */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
 
-p.subtitle {
-  color: #94a3b8;
-  margin-top: 8px;
-  font-size: 16px;
-}
+        .hero-badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
 
-/* ================== GRID CONTAINER ================== */
-.container {
-  max-width: 1100px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  padding: 20px;
-  perspective: 1500px;
-}
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--text);
+            line-height: 1.1;
+        }
 
-/* ================== GLASSMORPHISM CARD ================== */
-.card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 28px;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.4s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(0, 242, 254, 0.4);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 25px 50px rgba(0, 242, 254, 0.15);
-}
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 16px auto 0;
+        }
 
-.card h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #fff;
-}
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
 
-/* ================== FORMS & INPUTS ================== */
-textarea, input[type="file"] {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  outline: none;
-}
+        .hero-stats .stat {
+            text-align: center;
+        }
 
-textarea {
-  resize: vertical;
-  min-height: 100px;
-  margin-bottom: 12px;
-}
+        .hero-stats .stat strong {
+            display: block;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+        }
 
-textarea:focus {
-  border-color: #00f2fe;
-  background: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-}
+        .hero-stats .stat span {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
 
-input[type="file"] {
-  background: rgba(255, 255, 255, 0.05);
-  cursor: pointer;
-}
-input[type="file"]::file-selector-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  margin-right: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-input[type="file"]::file-selector-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
+        /* ─── TOOL GRID ─── */
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
 
-/* ================== PREMIUM DROP ZONE ================== */
-.drop {
-  border: 2px dashed rgba(255, 255, 255, 0.2);
-  padding: 30px 20px;
-  border-radius: 16px;
-  text-align: center;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
-  color: #94a3b8;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  margin-bottom: 14px;
-}
+        .section-sub {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
 
-.drop:hover {
-  border-color: #00f2fe;
-  background: rgba(0, 242, 254, 0.04);
-  color: #fff;
-}
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 20px 0 60px;
+        }
 
-/* ================== PREMIUM BUTTONS ================== */
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 14px;
-  border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  color: white;
-  background: linear-gradient(135deg, #ff2a5f, #ff7e40);
-  box-shadow: 0 8px 20px rgba(255, 42, 95, 0.25);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.card:nth-child(1) button { background: linear-gradient(135deg, #00f2fe, #4facfe); box-shadow: 0 8px 20px rgba(0, 242, 254, 0.25); }
-.card:nth-child(2) button { background: linear-gradient(135deg, #b154ff, #7c4dff); box-shadow: 0 8px 20px rgba(124, 77, 255, 0.25); }
-.card:nth-child(3) button { background: linear-gradient(135deg, #11ffbd, #aaffe5); color: #070510; box-shadow: 0 8px 20px rgba(17, 255, 189, 0.25); }
-.card:nth-child(4) button { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #070510; box-shadow: 0 8px 20px rgba(255, 154, 158, 0.25); }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
 
-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
 
-button:active {
-  transform: translateY(1px) scale(0.98);
-}
+        .card-header .icon {
+            font-size: 28px;
+        }
 
-/* ================== PROGRESS BAR ================== */
-.progress {
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 15px;
-}
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
 
-.bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #00f2fe, #4facfe);
-  border-radius: 10px;
-  transition: width 0.4s ease;
-}
+        .card p.desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
 
-/* ================== LIVE PREVIEW IMAGE POOL ================== */
-.preview {
-  margin-top: 14px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-height: 80px;
-  overflow-y: auto;
-}
+        .card textarea,
+        .card input[type="file"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            background: var(--bg);
+            color: var(--text);
+        }
 
-.preview img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+        .card textarea {
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 0;
+        }
 
-/* ================== SEO INFORMATION TEXT ================== */
-.seo-content {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 20px;
-  color: #94a3b8;
-  font-size: 15px;
-  line-height: 1.8;
-}
-.seo-content h2, .seo-content h3 {
-  color: #fff;
-  margin-top: 25px;
-  margin-bottom: 12px;
-}
-.seo-content h2 { font-size: 26px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;}
-.seo-content h3 { font-size: 20px; }
+        .card textarea:focus,
+        .card input[type="file"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
-.seo-content ul, .seo-content ol {
-  margin-left: 20px;
-  margin-bottom: 15px;
-}
+        .card input[type="file"] {
+            padding: 10px 12px;
+            cursor: pointer;
+        }
 
-/* ================== CONTACT SECTION ================== */
-.contact-section {
-  max-width: 1100px;
-  margin: 40px auto 20px;
-  padding: 0 20px;
-}
+        .card input[type="file"]::file-selector-button {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            margin-right: 12px;
+        }
 
-.contact-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-}
+        .card input[type="file"]::file-selector-button:hover {
+            background: var(--primary-dark);
+        }
 
-.contact-card h3 {
-  font-size: 18px;
-  color: #fff;
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-}
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--bg);
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
 
-.contact-grid {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-}
+        .drop-zone:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.04);
+            color: var(--text);
+        }
 
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  color: #94a3b8;
-}
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+            margin-top: 12px;
+        }
 
-.contact-item a {
-  color: #00f2fe;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s;
-}
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
 
-.contact-item a:hover {
-  color: #4facfe;
-  text-decoration: underline;
-}
+        .btn:active {
+            transform: translateY(0);
+        }
 
-.footer-links {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 14px;
-}
-.footer-links button {
-  background: none;
-  border: none;
-  box-shadow: none;
-  color: #94a3b8;
-  width: auto;
-  margin: 0;
-  padding: 0;
-  font-weight: 500;
-  cursor: pointer;
-  letter-spacing: normal;
-  transition: color 0.2s;
-}
-.footer-links button:hover {
-  color: #fff;
-  transform: none;
-  filter: none;
-}
+        .btn-variant {
+            background: linear-gradient(135deg, var(--secondary), #7c3aed);
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.25);
+        }
 
-/* ================== NAVIGATION BAR ================== */
-.nav {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15, 12, 30, 0.6);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50px;
-  display: flex;
-  gap: 10px;
-  padding: 8px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-  z-index: 1000;
-}
+        .btn-variant:hover {
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35);
+        }
 
-.nav-item {
-  padding: 12px 24px;
-  color: #94a3b8;
-  border-radius: 40px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-}
+        .progress {
+            width: 100%;
+            height: 5px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 14px;
+        }
 
-.nav-item:hover, .nav-item.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-}
+        .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
 
-/* ================== NEW POPUP MODAL STYLES ================== */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(7, 5, 16, 0.7);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  padding: 20px;
-}
+        .preview-thumbs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0 4px;
+            max-height: 80px;
+            overflow-y: auto;
+        }
 
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
+        .preview-thumbs img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
 
-.modal-box {
-  background: rgba(25, 20, 45, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.1);
-  border-radius: 24px;
-  max-width: 700px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  padding: 35px;
-  position: relative;
-  transform: scale(0.9);
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
+        /* ─── CONTENT SECTIONS ─── */
+        .content-section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px 36px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin: 40px 0 30px;
+        }
 
-.modal-overlay.active .modal-box {
-  transform: scale(1);
-}
+        .content-section h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
 
-.modal-close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 18px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
-  transition: all 0.2s;
-}
+        .content-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 28px;
+            margin-bottom: 8px;
+        }
 
-.modal-close-btn:hover {
-  background: #ff2a5f;
-  border-color: #ff2a5f;
-  transform: rotate(90deg);
-}
+        .content-section h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 20px;
+            margin-bottom: 6px;
+        }
 
-.modal-box h2 {
-  font-size: 24px;
-  margin-bottom: 18px;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 10px;
-}
+        .content-section p,
+        .content-section li {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
 
-.modal-box h3 {
-  font-size: 16px;
-  color: #00f2fe;
-  margin-top: 15px;
-  margin-bottom: 8px;
-}
+        .content-section ul,
+        .content-section ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
 
-.modal-box p, .modal-box ul {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #cbd5e1;
-  margin-bottom: 12px;
-}
-.modal-box ul { margin-left: 20px; }
-</style>
+        .content-section .highlight-box {
+            background: rgba(99, 102, 241, 0.06);
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            margin: 20px 0;
+        }
+
+        .content-section .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .content-section .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .content-section .comparison-table th,
+        .content-section .comparison-table td {
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        .content-section .comparison-table th {
+            background: var(--bg);
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .content-section .comparison-table td {
+            color: var(--text-secondary);
+        }
+
+        .content-section .comparison-table .check {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer-section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .footer-section .contact-row {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            margin: 12px 0 16px;
+        }
+
+        .footer-section .contact-row a {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .footer-section .contact-row a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .footer-links button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 8px;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-links button:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .footer-copy {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* ─── MODAL ─── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 36px 40px;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            transform: rotate(90deg);
+        }
+
+        .modal-box h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-box h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 20px;
+            margin-bottom: 6px;
+        }
+
+        .modal-box p,
+        .modal-box ul {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .modal-box ul {
+            margin-left: 22px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-section {
+                padding: 24px 18px;
+            }
+            .modal-box {
+                padding: 24px 18px;
+            }
+            .hero-stats {
+                gap: 20px;
+            }
+            .hero-stats .stat strong {
+                font-size: 22px;
+            }
+            .comparison-table {
+                font-size: 12px;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 26px;
+            }
+            .container {
+                padding: 0 14px;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+            .btn {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="orb"></div>
-<div class="orb"></div>
-<div class="orb"></div>
+    <!-- ═══ HEADER (No Navigation) ═══ -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">P</span>
+                PDF<span>Genie</span>
+            </a>
+            <div class="header-tagline">Free • Private • Client‑Side PDF Tools</div>
+        </div>
+    </header>
 
-<header>
-  <h1>Free Online PDF Converter – Image, Word & PDF Tools</h1>
-  <p class="subtitle">Fast, secure, and beautiful Client-Side PDF Tools</p>
-</header>
+    <!-- ═══ HERO ═══ -->
+    <section class="container hero">
+        <div class="hero-badge">🚀 100% Client-Side • No Uploads</div>
+        <h1>Your Complete <span>PDF Toolkit</span> — Free & Private</h1>
+        <p>Convert, merge, and edit PDFs entirely in your browser. Your files never leave your device. No sign-up, no limits.</p>
+        <div class="hero-stats">
+            <div class="stat"><strong>5+</strong><span>Powerful Tools</span></div>
+            <div class="stat"><strong>∞</strong><span>No File Limits</span></div>
+            <div class="stat"><strong>🔒</strong><span>Zero Data Retention</span></div>
+            <div class="stat"><strong>⚡</strong><span>Instant Processing</span></div>
+        </div>
+    </section>
 
-<main class="container">
+    <!-- ═══ TOOL GRID ═══ -->
+    <section class="container" id="tools">
+        <h2 class="section-title">All Tools at a Glance</h2>
+        <p class="section-sub">Pick a tool below and start working instantly — no installation, no registration.</p>
 
-  <section class="card">
-    <div>
-      <h2>🖼️ Image to PDF Converter</h2>
-      <div class="drop" onclick="imgInput.click()" role="button" aria-label="Upload Images">Drag & Drop Images here or Click</div>
-      <input type="file" id="imgInput" multiple hidden onchange="handleImgPreview()" accept="image/*">
+        <div class="tool-grid">
+
+            <!-- Card 1: Image to PDF -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="icon">🖼️</span>
+                        <h2>Image to PDF</h2>
+                    </div>
+                    <p class="desc">Convert PNG, JPG, WebP into a single PDF document.</p>
+                    <div class="drop-zone" onclick="document.getElementById('imgInput').click()">📂 Drop images or click to browse</div>
+                    <input type="file" id="imgInput" multiple hidden accept="image/*" onchange="handleImgPreview()">
+                    <div class="preview-thumbs" id="imgPreview"></div>
+                </div>
+                <div>
+                    <button class="btn" onclick="imgToPDF()">Convert to PDF</button>
+                    <div class="progress"><div class="bar" id="p1"></div></div>
+                </div>
+            </div>
+
+            <!-- Card 2: Text to PDF -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="icon">📝</span>
+                        <h2>Text to PDF</h2>
+                    </div>
+                    <p class="desc">Type or paste text and generate a clean PDF document.</p>
+                    <textarea id="textInput" placeholder="Write your content here…"></textarea>
+                </div>
+                <div>
+                    <button class="btn btn-variant" onclick="textToPDF()">Generate PDF</button>
+                    <div class="progress"><div class="bar" id="p2"></div></div>
+                </div>
+            </div>
+
+            <!-- Card 3: Merge PDFs -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="icon">📎</span>
+                        <h2>Merge PDFs</h2>
+                    </div>
+                    <p class="desc">Combine multiple PDF files into one document.</p>
+                    <div class="drop-zone" onclick="document.getElementById('pdfInput').click()">📂 Select PDFs to merge</div>
+                    <input type="file" id="pdfInput" multiple hidden accept=".pdf">
+                </div>
+                <div>
+                    <button class="btn" onclick="mergePDF()">Merge Files</button>
+                    <div class="progress"><div class="bar" id="p3"></div></div>
+                </div>
+            </div>
+
+            <!-- Card 4: PDF to Word -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="icon">📄</span>
+                        <h2>PDF → Word</h2>
+                    </div>
+                    <p class="desc">Extract text from PDF and save as a .docx file.</p>
+                    <input type="file" id="pdfWordInput" accept=".pdf">
+                </div>
+                <div>
+                    <button class="btn btn-variant" onclick="pdfToWord()">Convert to DOCX</button>
+                    <div class="progress"><div class="bar" id="p4"></div></div>
+                </div>
+            </div>
+
+            <!-- Card 5: Word to PDF -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="icon">📝</span>
+                        <h2>Word → PDF</h2>
+                    </div>
+                    <p class="desc">Upload a .docx file and get a high‑quality PDF.</p>
+                    <input type="file" id="wordInput" accept=".docx">
+                </div>
+                <div>
+                    <button class="btn" onclick="wordToPDF()">Convert to PDF</button>
+                    <div class="progress"><div class="bar" id="p5"></div></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══ CONTENT SECTION 1: Why PDFGenie ─── -->
+    <section class="container">
+        <div class="content-section">
+            <h2>Why PDFGenie is the Smartest Choice for Document Processing</h2>
+            <p>In a world where online privacy is increasingly rare, PDFGenie stands out by offering a complete suite of PDF tools that run entirely in your browser. We use trusted open-source libraries like <strong>pdf-lib</strong>, <strong>jsPDF</strong>, <strong>pdf.js</strong>, and <strong>Mammoth.js</strong> to handle every conversion on your own machine. This means your sensitive documents — whether they are contracts, personal photos, or confidential reports — never touch our servers.</p>
+
+            <div class="highlight-box">
+                <p><strong>🔒 Zero-Upload Guarantee:</strong> Every file you process stays on your device. We have no access to your data, and we cannot store or share it. This is the future of private document management.</p>
+            </div>
+
+            <h3>How to Convert Images to PDF (Step-by-Step)</h3>
+            <ol>
+                <li><strong>Select your images</strong> — click the drop zone or drag and drop any number of PNG, JPG, or WebP files.</li>
+                <li><strong>Preview thumbnails</strong> — a live preview shows you exactly which images are queued.</li>
+                <li><strong>Click "Convert to PDF"</strong> — the tool compiles all images into a single PDF, each on a new page.</li>
+                <li><strong>Download instantly</strong> — your new PDF is saved directly to your device, with no waiting.</li>
+            </ol>
+
+            <h3>Merge PDFs Like a Pro</h3>
+            <p>Whether you're combining scanned receipts, merging chapters of an eBook, or assembling a portfolio, our merge tool lets you combine any number of PDF files in the order you select. The process preserves formatting, fonts, and images exactly as they appear in the source files, thanks to the power of <code>pdf-lib</code>.</p>
+
+            <h3>Convert Word to PDF Without Losing Quality</h3>
+            <p>Using <code>mammoth</code>, we extract text content from your .docx files and rebuild it as a clean PDF. While complex layouts (tables, headers, footers) are not fully preserved, the core textual content is reliably transferred — perfect for resumes, articles, and plain text documents.</p>
+
+            <h3>Extract Text from PDF to Word</h3>
+            <p>Our PDF to Word converter uses <code>pdf.js</code> to read the text content from your PDF and create a new .docx file. This is ideal for repurposing content from reports, academic papers, or old documents into editable Word format. While it doesn't preserve complex formatting, it reliably extracts all readable text.</p>
+        </div>
+    </section>
+
+    <!-- ═══ CONTENT SECTION 2: Detailed Use Cases ─── -->
+    <section class="container">
+        <div class="content-section">
+            <h2>Who Benefits from PDFGenie?</h2>
+            <p>Our tools are designed for a wide range of users and use cases. Here's how different professionals can leverage PDFGenie:</p>
+
+            <h3>For Students and Academics</h3>
+            <ul>
+                <li><strong>Convert research papers to PDF</strong> — ensure your work is in a universally readable format.</li>
+                <li><strong>Merge lecture notes</strong> — combine multiple PDF handouts into one comprehensive study guide.</li>
+                <li><strong>Extract text from scanned PDFs</strong> — use the PDF to Word converter to get editable text from old journal articles.</li>
+            </ul>
+
+            <h3>For Business Professionals</h3>
+            <ul>
+                <li><strong>Convert contracts to PDF</strong> — turn Word documents into secure, non-editable PDFs for signing.</li>
+                <li><strong>Merge financial reports</strong> — combine quarterly summaries into a single annual report.</li>
+                <li><strong>Extract text from PDF invoices</strong> — convert PDF invoices to Word for easier data entry.</li>
+            </ul>
+
+            <h3>For Creatives and Designers</h3>
+            <ul>
+                <li><strong>Convert images to PDF</strong> — compile portfolios, mood boards, or design mockups into a single PDF presentation.</li>
+                <li><strong>Merge design assets</strong> — combine multiple PDF concept boards into one cohesive file.</li>
+            </ul>
+
+            <h3>For Everyday Users</h3>
+            <ul>
+                <li><strong>Create PDFs from notes</strong> — use the Text to PDF tool to turn your ideas into a formal document.</li>
+                <li><strong>Merge scanned documents</strong> — combine photos of receipts, tickets, or letters into one PDF.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ═══ CONTENT SECTION 3: Comparison Table ─── -->
+    <section class="container">
+        <div class="content-section">
+            <h2>PDFGenie vs. Cloud-Based PDF Tools</h2>
+            <p>Most online PDF converters require you to upload your files to a remote server. This exposes your data to potential breaches, server downtime, and privacy concerns. Here's how PDFGenie compares:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>PDFGenie (Client‑Side)</th>
+                        <th>Cloud‑Based Tools</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>File Privacy</td>
+                        <td class="check">✅ Files never leave your device</td>
+                        <td>❌ Files uploaded to external servers</td>
+                    </tr>
+                    <tr>
+                        <td>File Size Limits</td>
+                        <td class="check">✅ Unlimited (local memory only)</td>
+                        <td>❌ Usually capped at 5-50 MB</td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td class="check">✅ Instant (no network latency)</td>
+                        <td>❌ Depends on server load and internet speed</td>
+                    </tr>
+                    <tr>
+                        <td>Cost</td>
+                        <td class="check">✅ Completely free</td>
+                        <td>❌ Often freemium or subscription</td>
+                    </tr>
+                    <tr>
+                        <td>Internet Required</td>
+                        <td class="check">✅ Only for initial load (libraries cached)</td>
+                        <td>❌ Always required for upload/download</td>
+                    </tr>
+                    <tr>
+                        <td>Data Retention</td>
+                        <td class="check">✅ Zero retention</td>
+                        <td>❌ May store files temporarily or permanently</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>With PDFGenie, you get all the functionality without sacrificing your privacy or paying a dime.</p>
+        </div>
+    </section>
+
+    <!-- ═══ CONTENT SECTION 4: Privacy & Security ─── -->
+    <section class="container">
+        <div class="content-section">
+            <h2>Privacy and Security: Our Top Priority</h2>
+            <p>We understand that your documents are personal, confidential, and valuable. That's why we've built PDFGenie with a privacy-first architecture.</p>
+
+            <h3>How We Protect Your Data</h3>
+            <ul>
+                <li><strong>Zero data collection:</strong> We do not track, store, or transmit any files, text, or personal information.</li>
+                <li><strong>No server-side processing:</strong> All operations run locally in your browser using JavaScript. Your files are never uploaded to our servers or any third-party service.</li>
+                <li><strong>Transparent code:</strong> Our tools are built on well-known, open-source libraries that have been audited by the developer community.</li>
+                <li><strong>No cookies (except for AdSense):</strong> We only use cookies for advertising purposes via Google AdSense, and you can opt out at any time.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>💡 Pro Tip:</strong> For maximum privacy, you can even use PDFGenie offline after the first load — all libraries are cached in your browser.</p>
+            </div>
+
+            <h3>What About Advertisements?</h3>
+            <p>We display non-intrusive ads from Google AdSense to keep the service free. Google may use cookies to serve personalized ads based on your browsing history. You can manage your ad preferences at <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ad Settings</a>.</p>
+        </div>
+    </section>
+
+    <!-- ═══ CONTENT SECTION 5: FAQ ─── -->
+    <section class="container">
+        <div class="content-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <h3>Is there a limit on file size or number of files?</h3>
+            <p>No — everything is processed locally. The only limit is your device's available memory and browser capabilities. You can convert hundreds of images or merge dozens of PDFs without any restrictions.</p>
+
+            <h3>Do you store my files on your servers?</h3>
+            <p>Absolutely not. All processing happens client-side. Your files never leave your computer. We have no access to your data, and we cannot recover or view any of your documents.</p>
+
+            <h3>What image formats are supported for Image to PDF?</h3>
+            <p>We support PNG, JPG, JPEG, and WebP. Each image becomes a separate page in the final PDF, preserving the original aspect ratio and quality.</p>
+
+            <h3>Can I merge password‑protected PDFs?</h3>
+            <p>Currently, the tool does not support encrypted or password‑protected PDFs. You'll need to unlock them first using a PDF unlocker tool.</p>
+
+            <h3>Is this service really free?</h3>
+            <p>Yes — completely free, with no hidden charges or sign-up requirements. We display non-intrusive ads to keep the service running.</p>
+
+            <h3>Does the tool work offline?</h3>
+            <p>After the first visit, all libraries are cached by your browser. You can use the tools offline (except for loading ads) as long as you don't clear your cache.</p>
+
+            <h3>What if I have a large PDF for text extraction?</h3>
+            <p>The PDF to Word converter can handle large PDFs, but performance depends on your device's processing power. For very large files, we recommend splitting the PDF into smaller parts first.</p>
+
+            <h3>Can I convert Word documents with complex formatting?</h3>
+            <p>Our Word to PDF converter extracts plain text content. Complex formatting like tables, columns, and embedded images are not preserved. For those, we recommend using a desktop word processor.</p>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <section class="container">
+        <div class="footer-section">
+            <h3>📬 Contact &amp; Inquiries</h3>
+            <div class="contact-row">
+                <span>✉️ <a href="mailto:anilsouth65@gmail.com">anilsouth65@gmail.com</a></span>
+                <span>📞 <a href="tel:9514391536">9514391536</a></span>
+            </div>
+            <div class="footer-links">
+                <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button>
+                <button type="button" onclick="openModal('termsModal')">Terms &amp; Conditions</button>
+            </div>
+        </div>
+        <div class="footer-copy">&copy; 2026 PDFGenie — Free Online PDF Tools. All rights reserved.</div>
+    </section>
+
+    <!-- ═══ MODALS ═══ -->
+    <div id="privacyModal" class="modal-overlay" onclick="closeModal(event, 'privacyModal')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="document.getElementById('privacyModal').classList.remove('active')">&times;</button>
+            <h2>Privacy Policy</h2>
+            <p><strong>Effective Date:</strong> May 30, 2026</p>
+            <p>PDFGenie is committed to protecting your privacy. Our entire platform is built on the principle that your data belongs to you.</p>
+            <h3>1. Zero Data Retention</h3>
+            <p>All processing occurs client-side. We do not collect, store, transmit, or share any files, images, or personal information. Your documents never leave your browser.</p>
+            <h3>2. Advertising & Cookies</h3>
+            <p>We use Google AdSense to display relevant advertisements. Google may use cookies to serve personalized ads based on your previous visits to this or other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ad Settings</a>.</p>
+            <h3>3. Third-Party Libraries</h3>
+            <p>Our tools rely on open-source libraries loaded from CDN networks. These libraries do not collect or transmit any user data.</p>
+            <h3>4. Contact Information</h3>
+            <p>If you email us or call us, we will only use your contact details to respond to your inquiry. We do not store or share this information.</p>
+            <h3>5. Changes to This Policy</h3>
+            <p>We may update this policy from time to time. Any changes will be posted on this page.</p>
+        </div>
     </div>
-    <div>
-      <div class="preview" id="imgPreview"></div>
-      <button onclick="imgToPDF()">Convert Images to PDF</button>
-      <div class="progress"><div id="p1" class="bar"></div></div>
+
+    <div id="termsModal" class="modal-overlay" onclick="closeModal(event, 'termsModal')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="document.getElementById('termsModal').classList.remove('active')">&times;</button>
+            <h2>Terms &amp; Conditions</h2>
+            <p><strong>Effective Date:</strong> May 30, 2026</p>
+            <p>By using PDFGenie, you agree to the following terms and conditions.</p>
+            <h3>1. Acceptance of Terms</h3>
+            <p>By accessing and using this website, you accept and agree to be bound by these Terms. If you do not agree, please do not use the site.</p>
+            <h3>2. Use of Tools</h3>
+            <p>All tools are provided “as is” without warranties of any kind. We do not guarantee that the tools will be error‑free or that they will meet your specific requirements.</p>
+            <h3>3. Intellectual Property</h3>
+            <p>All code, design, and content on this site are owned by PDFGenie. You may not reproduce, distribute, or create derivative works without prior written permission.</p>
+            <h3>4. Limitation of Liability</h3>
+            <p>In no event shall PDFGenie be liable for any damages arising out of the use or inability to use the tools, including but not limited to data loss, business interruption, or any other indirect damages.</p>
+            <h3>5. Changes to Terms</h3>
+            <p>We reserve the right to update these Terms at any time. Continued use of the site constitutes acceptance of the updated Terms.</p>
+            <h3>6. Governing Law</h3>
+            <p>These Terms shall be governed by and construed in accordance with the laws of India.</p>
+        </div>
     </div>
-  </section>
 
-  <section class="card">
-    <div>
-      <h2>📝 Text to PDF Generator</h2>
-      <label for="text" class="visually-hidden" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">Input Text Content</label>
-      <textarea id="text" placeholder="Type or paste your rich document text content here..."></textarea>
-    </div>
-    <div>
-      <button onclick="textToPDF()">Generate PDF Document</button>
-      <div class="progress"><div id="p2" class="bar"></div></div>
-    </div>
-  </section>
+    <!-- ═══ JAVASCRIPT ═══ -->
+    <script>
+        const { jsPDF } = window.jspdf;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  <section class="card">
-    <div>
-      <h2>📎 Combine & Merge PDFs</h2>
-      <div class="drop" onclick="pdfInput.click()" role="button" aria-label="Upload multiple PDFs">Select multi-page PDFs</div>
-      <input type="file" id="pdfInput" multiple hidden accept=".pdf">
-    </div>
-    <div>
-      <button onclick="mergePDF()">Merge PDF Files</button>
-      <div class="progress"><div id="p3" class="bar"></div></div>
-    </div>
-  </section>
+        // ─── MODALS ───
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
 
-  <section class="card">
-    <div>
-      <h2>📄 Convert PDF to Word (Docx)</h2>
-      <input type="file" id="pdfWord" accept=".pdf" aria-label="Choose PDF file to convert to Word">
-    </div>
-    <div>
-      <button onclick="pdfToWord()">Convert to Word Docx</button>
-      <div class="progress"><div id="p4" class="bar"></div></div>
-    </div>
-  </section>
+        function closeModal(event, id) {
+            if (event.target === document.getElementById(id)) {
+                document.getElementById(id).classList.remove('active');
+            }
+        }
 
-  <section class="card">
-    <div>
-      <h2>📝 Convert Word to PDF</h2>
-      <input type="file" id="word" accept=".docx" aria-label="Choose Word file to convert to PDF">
-    </div>
-    <div>
-      <button onclick="wordToPDF()">Convert Word to PDF</button>
-      <div class="progress"><div id="p5" class="bar"></div></div>
-    </div>
-  </section>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(function(el) {
+                    el.classList.remove('active');
+                });
+            }
+        });
 
-</main>
+        // ─── PROGRESS ───
+        function setBar(id, val) {
+            document.getElementById(id).style.width = Math.min(val, 100) + '%';
+        }
 
-<article class="seo-content">
-  <h2>Comprehensive Guide to Online PDF Processing and Tools</h2>
-  <p>Welcome to the ultimate web toolset for quick document management. Our system is engineered using entirely client-side modern JavaScript architecture. This means your files, sensitive data, images, and corporate documents are 100% safe—they never leave your local workspace or upload to any external remote servers.</p>
+        // ─── IMAGE PREVIEW ───
+        function handleImgPreview() {
+            const files = document.getElementById('imgInput').files;
+            const preview = document.getElementById('imgPreview');
+            preview.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let im = document.createElement('img');
+                    im.src = e.target.result;
+                    im.alt = 'Preview ' + (i + 1);
+                    preview.appendChild(im);
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        }
 
-  <h2>How to Convert Images to PDF Smoothly</h2>
-  <p>Converting standard image formats like PNG, JPEG, and WebP into a clean PDF compilation has never been easier. This feature compiles multiple graphics layouts directly into standardized A4 proportions. Follow these steps:</p>
-  <ol>
-    <li>Drag and drop your photos directly into the designated layout card field above.</li>
-    <li>Review the active live generated miniature asset preview pool to confirm selection.</li>
-    <li>Click on the action confirmation trigger button to download your compiled asset file immediately.</li>
-  </ol>
+        // ─── IMAGE TO PDF ───
+        async function imgToPDF() {
+            const files = document.getElementById('imgInput').files;
+            if (!files.length) return alert('Please select at least one image.');
+            const pdf = new jsPDF();
+            for (let i = 0; i < files.length; i++) {
+                setBar('p1', (i / files.length) * 100);
+                const data = await readFile(files[i]);
+                const img = new Image();
+                img.src = data;
+                await new Promise(r => img.onload = r);
+                const w = pdf.internal.pageSize.getWidth();
+                const h = (img.height * w) / img.width;
+                if (i > 0) pdf.addPage();
+                pdf.addImage(data, 'JPEG', 0, 0, w, h);
+            }
+            pdf.save('images.pdf');
+            setBar('p1', 100);
+        }
 
-  <h2>The Importance of Client-Side Web Tools for Privacy</h2>
-  <p>Typical conversion platforms process documents through cloud execution threads. This exposes your file architectures to structural risks and potential breaches. By executing client rendering using libraries like <code>jsPDF</code>, <code>pdf-lib</code>, and <code>Mammoth.js</code>, our platform eliminates intermediary cloud hosting environments completely.</p>
+        // ─── TEXT TO PDF ───
+        function textToPDF() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) return alert('Please enter some text.');
+            const pdf = new jsPDF();
+            const lines = pdf.splitTextToSize(text, 180);
+            pdf.text(lines, 10, 20);
+            pdf.save('text.pdf');
+            setBar('p2', 100);
+        }
 
-  <h3>Frequently Asked Questions</h3>
-  
-  <h3>Is there a file upload size limitation?</h3>
-  <p>No. Because processing is handled completely locally by your client hardware memory engine, file volume restraints depend entirely on your current available system configurations and browser capabilities.</p>
+        // ─── MERGE PDF ───
+        async function mergePDF() {
+            const files = document.getElementById('pdfInput').files;
+            if (!files.length) return alert('Please select PDF files to merge.');
+            const merged = await PDFLib.PDFDocument.create();
+            for (let i = 0; i < files.length; i++) {
+                setBar('p3', (i / files.length) * 100);
+                const buf = await files[i].arrayBuffer();
+                const src = await PDFLib.PDFDocument.load(buf);
+                const pages = await merged.copyPages(src, src.getPageIndices());
+                pages.forEach(p => merged.addPage(p));
+            }
+            const bytes = await merged.save();
+            downloadBytes(bytes, 'merged.pdf');
+            setBar('p3', 100);
+        }
 
-  <h3>Can I convert formatted text records directly into documents?</h3>
-  <p>Yes. The integrated real-time dynamic Text to PDF module splits input lines into explicit typographical boundaries automatically. This retains native layout spacing parameters inside standard PDF format distributions cleanly.</p>
+        // ─── PDF TO WORD ───
+        async function pdfToWord() {
+            const file = document.getElementById('pdfWordInput').files[0];
+            if (!file) return alert('Please upload a PDF file.');
+            try {
+                const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+                let text = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    text += content.items.map(item => item.str).join(' ') + '\n\n';
+                    setBar('p4', (i / pdf.numPages) * 100);
+                }
+                const doc = new docx.Document({
+                    sections: [{ children: [new docx.Paragraph(text)] }]
+                });
+                const blob = await docx.Packer.toBlob(doc);
+                downloadBlob(blob, 'converted.docx');
+                setBar('p4', 100);
+            } catch (err) {
+                alert('Error: ' + err.message);
+                setBar('p4', 0);
+            }
+        }
 
-  <h3>How can I safely turn PDF assets back to Microsoft Word documents?</h3>
-  <p>The system utilizes the <code>pdf.js</code> object architecture layer to dissect font character layouts, automatically restructuring readable strings into editable paragraphs before compiling a native <code>.docx</code> file element container framework asynchronously.</p>
-</article>
+        // ─── WORD TO PDF ───
+        async function wordToPDF() {
+            const file = document.getElementById('wordInput').files[0];
+            if (!file) return alert('Please upload a .docx file.');
+            setBar('p5', 25);
+            try {
+                const buf = await file.arrayBuffer();
+                const result = await mammoth.extractRawText({ arrayBuffer: buf });
+                const text = result.value;
+                setBar('p5', 60);
+                if (!text.trim()) throw new Error('No readable text found.');
+                const pdf = new jsPDF();
+                const lines = pdf.splitTextToSize(text, 180);
+                pdf.text(lines, 10, 20);
+                pdf.save('word.pdf');
+                setBar('p5', 100);
+            } catch (err) {
+                alert('Error: ' + err.message);
+                setBar('p5', 0);
+            }
+        }
 
-<footer class="contact-section">
-  <div class="contact-card">
-    <h3>📢 Ad placement / Inquiries</h3>
-    <div class="contact-grid">
-      <div class="contact-item">
-        <span>✉️ Email:</span> 
-        <a href="mailto:anilsouth65@gmail.com">anilsouth65@gmail.com</a>
-      </div>
-      <div class="contact-item">
-        <span>📞 Phone:</span> 
-        <a href="tel:9514391536">9514391536</a>
-      </div>
-    </div>
-    <div class="footer-links">
-      <button type="button" onclick="openModal('privacyModal')">Privacy Policy</button>
-      <button type="button" onclick="openModal('termsModal')">Terms & Conditions</button>
-    </div>
-  </div>
-</footer>
+        // ─── HELPERS ───
+        function readFile(file) {
+            return new Promise((r) => {
+                const fr = new FileReader();
+                fr.onload = (e) => r(e.target.result);
+                fr.readAsDataURL(file);
+            });
+        }
 
-<nav class="nav">
-  <a class="nav-item active" href="index.html">🏠 Home</a>
-  <a class="nav-item" href="image-to-pdf.html">🖼️ Image</a>
-  <a class="nav-item" href="pdf-tools.html">📄 PDF</a>
-  <a class="nav-item" href="all-tools.html">⚙️ Tools</a>
-  <a class="nav-item" href="AI_image_generater.html">🎨 AI Image Gen</a>
-</nav>
+        function downloadBlob(blob, name) {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        }
 
-
-<div id="privacyModal" class="modal-overlay" onclick="closeModal(event, 'privacyModal')">
-  <div class="modal-box">
-    <button class="modal-close-btn" onclick="document.getElementById('privacyModal').classList.remove('active')">&times;</button>
-    <h2>Privacy Policy</h2>
-    <p><strong>Effective Date:</strong> May 29, 2026</p>
-    <p>Your privacy is of critical priority to us. This legal disclosure clarifies how our dynamic web workspace handles computational data parameters securely.</p>
-    
-    <h3>1. Zero Data Retention Architecture</h3>
-    <p>Our infrastructure functions strictly via client-side operations. Any image arrays, system configurations, textual scripts, or digital document nodes imported into the program UI modules undergo compilation in local sandbox runtimes. Your source data assets never upload to remote cloud storage engines or exterior web logs.</p>
-    
-    <h3>2. Advertising & External Cookies</h3>
-    <p>We deploy Google AdSense services to serve dynamic banner units. Vendor partners use algorithmic cookie architectures (such as the DART configuration layer) to tailor visual components depending on user traversal vectors. You can configure precise opting configurations natively via target browser tracking parameters.</p>
-    
-    <h3>3. Direct Web Inquiries</h3>
-    <p>When contacting our operator desks via explicit telephone lines or email frameworks, communication logs are processed strictly to answer individual technical requests and are completely isolated from peripheral operational monetization loops.</p>
-  </div>
-</div>
-
-
-<div id="termsModal" class="modal-overlay" onclick="closeModal(event, 'termsModal')">
-  <div class="modal-box">
-    <button class="modal-close-btn" onclick="document.getElementById('termsModal').classList.remove('active')">&times;</button>
-    <h2>Terms & Conditions</h2>
-    <p><strong>Effective Date:</strong> May 29, 2026</p>
-    <p>By operating these client tools, you comprehensively agree to conform to the statutory operational bounds outlined below.</p>
-    
-    <h3>1. Usage Permissions and Scope</h3>
-    <p>Users receive fully free, open access to run structural components across files, spreadsheets, text bodies, and design files indefinitely. Usage must comply with applicable regional privacy paradigms and copyholder frameworks.</p>
-    
-    <h3>2. Liability Disclaimer</h3>
-    <p>The applications run entirely "as-is" without architectural warranties of any variety. The creators hold no legal liability for any peripheral processing delays, browser runtime stalls, memory hardware failures, or secondary data issues stemming from execution tasks.</p>
-    
-    <h3>3. Structural Updates</h3>
-    <p>We retain full privileges to reconfigure tool algorithms, interface formatting layouts, asset distribution hooks, or core platform Terms conditions instantly without prior system-wide declarations.</p>
-  </div>
-</div>
-
-
-<script>
-const { jsPDF } = window.jspdf;
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-/* --- POPUP WINDOW TRIGGERS --- */
-function openModal(id) {
-  document.getElementById(id).classList.add('active');
-}
-function closeModal(event, id) {
-  if (event.target === document.getElementById(id)) {
-    document.getElementById(id).classList.remove('active');
-  }
-}
-
-function setBar(id, val){
-  document.getElementById(id).style.width = val + "%";
-}
-
-function handleImgPreview() {
-  const files = imgInput.files;
-  const preview = document.getElementById("imgPreview");
-  preview.innerHTML = "";
-  for (let i = 0; i < files.length; i++) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      let im = document.createElement("img");
-      im.src = e.target.result;
-      im.alt = "Uploaded image preview for conversion " + (i + 1);
-      preview.appendChild(im);
-    }
-    reader.readAsDataURL(files[i]);
-  }
-}
-
-async function imgToPDF(){
-  const files = imgInput.files;
-  if(!files.length) return alert("Please select images first!");
-  const pdf = new jsPDF();
-  
-  for(let i=0; i<files.length; i++){
-    setBar("p1", (i / files.length) * 100);
-    const imgData = await read(files[i]);
-    const img = new Image();
-    img.src = imgData;
-    await new Promise(r => img.onload = r);
-
-    const w = pdf.internal.pageSize.getWidth();
-    const h = (img.height * w) / img.width;
-
-    if(i > 0) pdf.addPage();
-    pdf.addImage(imgData, "JPEG", 0, 0, w, h);
-  }
-  pdf.save("images.pdf");
-  setBar("p1", 100);
-}
-
-function textToPDF(){
-  const t = text.value;
-  if(!t.trim()) return alert("Please input some text!");
-  const pdf = new jsPDF();
-  pdf.text(pdf.splitTextToSize(t, 180), 10, 20);
-  pdf.save("text.pdf");
-  setBar("p2", 100);
-}
-
-async function mergePDF(){
-  const files = pdfInput.files;
-  if(!files.length) return alert("Please select PDF files to merge!");
-  const merged = await PDFLib.PDFDocument.create();
-
-  for(let i=0; i<files.length; i++){
-    setBar("p3", (i / files.length) * 100);
-    const buf = await files[i].arrayBuffer();
-    const pdf = await PDFLib.PDFDocument.load(buf);
-    const pages = await merged.copyPages(pdf, pdf.getPageIndices());
-    pages.forEach(p => merged.addPage(p));
-  }
-
-  const bytes = await merged.save();
-  download(bytes, "merged.pdf");
-  setBar("p3", 100);
-}
-
-async function pdfToWord(){
-  const file = pdfWord.files[0];
-  if(!file) return alert("Please upload a PDF file!");
-  
-  try {
-    const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
-    let text = "";
-    
-    for(let i=1; i<=pdf.numPages; i++){
-      const p = await pdf.getPage(i);
-      const c = await p.getTextContent();
-      text += c.items.map(i => i.str).join(" ") + "\n\n";
-      setBar("p4", (i / pdf.numPages) * 100);
-    }
-
-    const doc = new docx.Document({
-      sections: [{ children: [new docx.Paragraph(text)] }]
-    });
-
-    const blob = await docx.Packer.toBlob(doc);
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "converted_file.docx";
-    a.click();
-    setBar("p4", 100);
-  } catch(error) {
-    alert("Error parsing PDF file: " + error.message);
-    setBar("p4", 0);
-  }
-}
-
-async function wordToPDF(){
-  const file = word.files[0];
-  if(!file) return alert("Please choose a Word file (.docx)!");
-  
-  setBar("p5", 25);
-  const arrayBuffer = await file.arrayBuffer();
-  
-  try {
-    const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
-    const textContent = result.value; 
-    
-    setBar("p5", 60);
-    if (!textContent.trim()) {
-       throw new Error("The selected Word file appears to contain no readable text.");
-    }
-
-    const pdf = new jsPDF();
-    const margins = 10;
-    const splitText = pdf.splitTextToSize(textContent, 180);
-    pdf.text(splitText, margins, 20);
-    
-    pdf.save("word.pdf");
-    setBar("p5", 100);
-  } catch (error) {
-    alert("Error parsing Word file: " + error.message);
-    setBar("p5", 0);
-  }
-}
-
-function read(file){
-  return new Promise(r => {
-    const f = new FileReader();
-    f.onload = e => r(e.target.result);
-    f.readAsDataURL(file);
-  });
-}
-
-function download(data, name){
-  const b = new Blob([data], {type: "application/pdf"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(b);
-  a.download = name;
-  a.click();
-}
-</script>
+        function downloadBytes(bytes, name) {
+            const blob = new Blob([bytes], { type: 'application/pdf' });
+            downloadBlob(blob, name);
+        }
+    </script>
 
 </body>
 </html>
